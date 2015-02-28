@@ -50,20 +50,21 @@ sudo apt-get purge likana
 ```
 
 
-### deb パッケージからインストール・アンインストール
+### make してインストール・アンインストール
 
-インストール
+インストール ( /usr/src など、make を実行するディレクトリに移動してから )
 
 ```shell
-cd /tmp
-wget https://github.com/maijou2501/likana.deb
-sudo dpkg -i likana.deb
+git clone https://github.com/maijou2501/likana
+cd likana
+make
+sudo make install
 ```
 
 アンインストール
 
 ```shell
-sudo dpkg -r likana
+sudo make uninstall
 ```
 
 
