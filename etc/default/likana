@@ -1,0 +1,14 @@
+# likana configuration
+
+# Start the execution daemon? (if installed. yes or no. default yes.)
+LIKANA_START=yes
+
+# Set character device file, set to /dev/input/event*
+# Set keyboard device file, MUST be set
+LIKANA_KEYBOARD=/dev/input/event8
+
+# Set mouse device file, optional set
+LIKANA_MOUSE=/dev/input/event9
+
+# Set execute shell (default /bin/bash)
+LIKANA_BASH=/bin/bash
