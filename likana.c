@@ -17,7 +17,7 @@
 #include <pthread.h>
 #include <linux/input.h>
 
-#define VERSION "1.0"
+#define VERSION "1.1"
 #define PUSH    1
 #define RELEASE 0
 #define STDOUT  1
