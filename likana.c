@@ -289,17 +289,6 @@ int main(int argc, char *argv[])
 			write_key_event( KEY_GRAVE, RELEASE, STDOUT);
 			mysleep();
 
-			// if NOT sleep, fail simulate input keys...
-			for (i = 0;i < count;i++) {
-				mysleep();
-				write_key_event( KEY_BACKSPACE, PUSH, STDOUT);
-				mysleep();
-				write_key_event( KEY_BACKSPACE, RELEASE, STDOUT);
-			}
-
-			mysleep();
-			count_h = 0;
-
 			// input key values
 			for (j = 0; j < count; j++) {
 				write_key_event( input[j], PUSH, STDOUT);
