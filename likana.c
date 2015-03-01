@@ -4,8 +4,8 @@
  *
  * description : rikana(http://suwa.6.ql.bz/rikana.html) for linux
  * author  : maijou2501
- * update  : 2015/02/28
- * version : 1.0
+ * update  : 2015/03/01
+ * version : 1.1
  *
  */
 
@@ -27,7 +27,7 @@
 #define HANKAKU_NUM   2
 #define INPUT_EVENTS 64
 #define SLEEP_TIME   0          // 0  sec
-#define SLEEP_TIME_NANO 1000000 // 1 msec
+#define SLEEP_TIME_NANO 2000000 // 2 msec
 
 // groval variations
 int input[INPUT_NUM] ={0};
@@ -272,9 +272,22 @@ int main(int argc, char *argv[])
 		// threshold counts of push hankaku/zenkaku key
 		if (count_h == HANKAKU_NUM) {
 
+			// clear hankaku/zenkaku counter
+			count_h = 0;
+
+			// if NOT sleep, fail simulate input keys...
+			for (i = 0;i < count;i++) {
+				write_key_event( KEY_BACKSPACE, PUSH, STDOUT);
+				mysleep();
+				write_key_event( KEY_BACKSPACE, RELEASE, STDOUT);
+				mysleep();
+			}
+
+			// press hankaku/zenkaku bottun
 			write_key_event( KEY_GRAVE, PUSH, STDOUT);
 			mysleep();
 			write_key_event( KEY_GRAVE, RELEASE, STDOUT);
+			mysleep();
 
 			// if NOT sleep, fail simulate input keys...
 			for (i = 0;i < count;i++) {
