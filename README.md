@@ -21,6 +21,7 @@ IMEオンを忘れてタイプしてしまったらすかさず「半角/全角�
 2. "半角/全角キー" を2連打
 3. IMEオンになり、「うちなおしてすと」で変換候補が出る
 
+![demo_likana_gif](https://github.com/maijou2501/maijou2501.github.io/blob/master/image/likana.gif)
 
 ## 動作要件
 
