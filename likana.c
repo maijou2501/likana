@@ -4,8 +4,8 @@
  *
  * description : rikana(http://suwa.6.ql.bz/rikana.html) for linux
  * author  : maijou2501
- * update  : 2015/03/01
- * version : 1.1
+ * update  : 2015/03/03
+ * version : 1.2
  *
  */
 
@@ -27,7 +27,7 @@
 #define HANKAKU_NUM   2
 #define INPUT_EVENTS 64
 #define SLEEP_TIME   0          // 0  sec
-#define SLEEP_TIME_NANO 2000000 // 2 msec
+#define SLEEP_TIME_NANO 20000000 // 20 msec
 
 // groval variations
 int input[INPUT_NUM] ={0};

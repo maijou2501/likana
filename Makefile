@@ -4,7 +4,7 @@ LOADLIBES = -pthread
 BINDIR=/usr/sbin
 NAME=likana
 
-likana:
+${NAME}:
 
 install:
 	install -d ${DESTDIR}${BINDIR}
@@ -13,13 +13,10 @@ install:
 	install -m 755 -g root -o root ./etc/default/${NAME} ${DESTDIR}/etc/default
 
 uninstall:
-	rm ${BINDIR}/${NAME}
-	rm /etc/init.d/${NAME}
-	rm /etc/default/${NAME}
-	rm /etc/rc2.d/S20${NAME}
-	rm /etc/rc3.d/S20${NAME}
-	rm /etc/rc4.d/S20${NAME}
-	rm /etc/rc5.d/S20${NAME}
+	rm -f ${BINDIR}/${NAME}
+	rm -f /etc/init.d/${NAME}
+	rm -f /etc/default/${NAME}
+	rm -f /etc/rc*.d/*${NAME}
 
 clean:
-	rm ./${NAME}
+	rm -f ./${NAME}
