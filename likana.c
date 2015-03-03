@@ -20,7 +20,6 @@
 #define VERSION "1.2"
 #define PUSH    1
 #define RELEASE 0
-#define STDOUT  1
 #define DETECT_KEY_CODE  0
 #define DETECT_KEY_VALUE 0
 #define INPUT_NUM    60
@@ -277,23 +276,23 @@ int main(int argc, char *argv[])
 
 			// if NOT sleep, fail simulate input keys...
 			for (i = 0;i < count;i++) {
-				write_key_event( KEY_BACKSPACE, PUSH, STDOUT);
+				write_key_event( KEY_BACKSPACE, PUSH, STDOUT_FILENO);
 				mysleep();
-				write_key_event( KEY_BACKSPACE, RELEASE, STDOUT);
+				write_key_event( KEY_BACKSPACE, RELEASE, STDOUT_FILENO);
 				mysleep();
 			}
 
 			// press hankaku/zenkaku bottun
-			write_key_event( KEY_GRAVE, PUSH, STDOUT);
+			write_key_event( KEY_GRAVE, PUSH, STDOUT_FILENO);
 			mysleep();
-			write_key_event( KEY_GRAVE, RELEASE, STDOUT);
+			write_key_event( KEY_GRAVE, RELEASE, STDOUT_FILENO);
 			mysleep();
 
 			// input key values
 			for (j = 0; j < count; j++) {
-				write_key_event( input[j], PUSH, STDOUT);
+				write_key_event( input[j], PUSH, STDOUT_FILENO);
 				mysleep();
-				write_key_event( input[j], RELEASE, STDOUT);
+				write_key_event( input[j], RELEASE, STDOUT_FILENO);
 				mysleep();
 				input[j]=0;
 			}
