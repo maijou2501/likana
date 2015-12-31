@@ -1,5 +1,6 @@
 CC = gcc
-CFLAGS = -Wall -O3
+CFLAGS = -O3 -s -fstack-protector-all -ffunction-sections -fdata-sections
+LDFLAGS = -Wl,-z,now,-z,relro,--gc-sections$
 LOADLIBES = -pthread
 BINDIR=/usr/sbin
 NAME=likana
