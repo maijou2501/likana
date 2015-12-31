@@ -4,8 +4,8 @@
  *
  * description : rikana(http://suwa.6.ql.bz/rikana.html) for linux
  * author  : maijou2501
- * update  : 2015/03/03
- * version : 1.2
+ * update  : 2016/01/01
+ * version : 1.3
  *
  */
 
@@ -17,7 +17,7 @@
 #include <pthread.h>
 #include <linux/input.h>
 
-#define VERSION "1.2"
+#define VERSION "1.3"
 #define PUSH    1
 #define RELEASE 0
 #define DETECT_KEY_CODE  0
@@ -25,7 +25,7 @@
 #define INPUT_NUM    60
 #define HANKAKU_NUM   2
 #define INPUT_EVENTS 64
-#define SLEEP_TIME   0          // 0  sec
+#define SLEEP_TIME    0          // 0  sec
 #define SLEEP_TIME_NANO 20000000 // 20 msec
 
 // groval variations
@@ -74,77 +74,6 @@ void write_key_event(int code, int value, int fd)
 	}
 }
 
-// capture keyboard event thread
-void* thread_keyboard(void *arg)
-{
-	// define valiations
-	short i;
-	short j;
-	struct input_event events[INPUT_EVENTS];
-	THREAD_ARG *thread_arg =(THREAD_ARG*)arg;
-
-	// pthread detach
-	pthread_t self_thread = pthread_self();
-	if (pthread_detach(self_thread) != 0) {
-		perror("detatch");
-		exit(EXIT_FAILURE);
-	}
-
-	// open device file of keyboard
-	int fd = open( (char *)thread_arg->device, O_RDONLY);
-	if (fd < 0) {
-		perror("open");
-		exit(EXIT_FAILURE);
-	}
-
-	// capture keyboard event loop
-	for (;;) {
-
-		size_t read_size = read(fd, events, sizeof(events));
-		for (i = 0; i < (int)(read_size / sizeof(struct input_event)); i++){
-			// detect key up event
-			if ( events[i].value == DETECT_KEY_VALUE && events[i].code != DETECT_KEY_CODE ){
-
-				// 1. release "-", "a-z" keys
-				if( events[i].code == KEY_MINUS\
-						|| ( events[i].code >= KEY_Q && events[i].code <= KEY_P)\
-						|| ( events[i].code >= KEY_A && events[i].code <= KEY_L )\
-						|| ( events[i].code >= KEY_Z && events[i].code <= KEY_M ) ) {
-
-					// check INPUT_NUM and clear counter, depend on hankaku counter
-					if( count == INPUT_NUM || count_h != 0 ) {
-						for ( j = 0; j < count; j++) {
-							input[j]=0;
-						}
-						count = 0;
-					}
-					// key logging
-					input[count] = events[i].code;
-					// increment counter
-					count++;
-					// clear hankaku counter
-					count_h = 0;
-
-				} else if ( events[i].code == KEY_BACKSPACE ) { // 2. release backspace
-					if( count != 0 ) count--;
-
-				} else if ( events[i].code == KEY_GRAVE) { // 3. release hankaku/zenkaku key
-					count_h++;
-
-				} else { // 4. release untarget keys (clear counter)
-					for ( j = 0; j < count; j++) {
-						input[j]=0;
-					}
-					count=0;
-					count_h = 0;
-				}
-			}
-		}
-	}
-	// close device file of keyboard
-	close(fd);
-}
-
 // capture mouse event thread
 void* thread_mouse(void *arg)
 {
@@ -164,7 +93,7 @@ void* thread_mouse(void *arg)
 	// open device file of mouse
 	int fd = open( (char *)thread_arg->device, O_RDONLY);
 	if (fd < 0) {
-		perror("open");
+		perror("mouse");
 		exit(EXIT_FAILURE);
 	}
 
@@ -188,7 +117,7 @@ void* thread_mouse(void *arg)
 // print usage
 void usage()
 {
-	printf( "Usage: linaka [option]... > /dev/input/event*\n"
+	printf( "Usage: likana [option]... > /dev/input/event*\n"
 			"  -k /dev/input/event*   character device of keyboard\n"
 			"  -m /dev/input/event*   character device of mouse\n"
 			"  -h                     display this help\n"
@@ -216,7 +145,7 @@ int main(int argc, char *argv[])
 	THREAD_ARG thread_arg;
 
 	// check arguments number
-	if ( argc == 0) {
+	if ( argc == 1 ) {
 		usage();
 		exit(EXIT_FAILURE);
 	}
@@ -235,12 +164,9 @@ int main(int argc, char *argv[])
 
 			case 'k':
 				keyboard = optarg;
-				// thread of keyboard event loop
-				//thread_arg.device = (char *)optarg;
-				//pthread_create( &th, NULL, thread_keyboard, &thread_arg );
 				break;
 
-			case 'm': 
+			case 'm':
 				// thread of mouse event loop
 				thread_arg.device = (char *)optarg;
 				pthread_create( &th, NULL, thread_mouse, &thread_arg );
@@ -250,13 +176,17 @@ int main(int argc, char *argv[])
 				// no arguments
 				exit(EXIT_FAILURE);
 
-				// case '?':
 			default:
 				// invalit option
 				exit(EXIT_FAILURE);
 		}
 	}
 
+	// check arguments number
+	if ( optind != argc) {
+		usage();
+		exit(EXIT_FAILURE);
+	}
 
 	// open device file of keyboard
 	int fd = open(keyboard, O_RDONLY);
