@@ -6,12 +6,12 @@
 # Should-Start:      udev
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: rikana for linux
-# Description:       rikana(http://suwa.6.ql.bz/rikana.html) for linux
+# Short-Description: rikana for Linux
+# Description:       rikana(http://suwa.6.ql.bz/rikana.html) for Linux
 ### END INIT INFO
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/sbin
-DESC="rikana for linux."
+DESC="rikana for Linux."
 NAME=likana
 DAEMON=/usr/sbin/$NAME
 PIDFILE=/var/run/$NAME.pid
@@ -27,6 +27,10 @@ INSSERV=/usr/lib/insserv/insserv
 if [ -z "$LIKANA_MOUSE" ]; then
 	DAEMON_ARGS="-k $LIKANA_KEYBOARD"
 else
+	if [ ! -c "$LIKANA_MOUSE" ]; then
+		echo "/etc/default/$NAME LIKANA_MOUSE is NOT character device." >&2
+		exit 1
+	fi
 	DAEMON_ARGS="-k $LIKANA_KEYBOARD -m $LIKANA_MOUSE"
 fi
 DAEMON_REDIRECT=$LIKANA_KEYBOARD
@@ -85,6 +89,12 @@ do_start()
 		return 2
 	fi
 
+	if [ ! -c "$LIKANA_KEYBOARD" ]; then
+		log_daemon_msg "/etc/default/$NAME LIKANA_KEYBOARD is NOT character device."
+		return 2
+	fi
+
+
 	start-stop-daemon --start --quiet --make-pidfile --pidfile $PIDFILE \
 		--background --exec "$LIKANA_BASH" -- -c "exec $DAEMON \
 		$DAEMON_ARGS > $DAEMON_REDIRECT" || return 2
@@ -122,79 +132,84 @@ do_reload() {
 }
 
 case "$1" in
-  start)
-	log_daemon_msg "Starting $NAME"
-	do_start
-	case "$?" in
-		0)	log_end_msg 0
-			;;
-		1)	log_daemon_msg "$NAME was already running";
-			log_end_msg 0
-			;;
-		*)	# Failed to start
-			log_daemon_msg "$NAME could not be started";
-			log_end_msg 1
-			;;
+	start)
+		log_daemon_msg "Starting $NAME"
+		do_start
+		case "$?" in
+			0)	log_end_msg 0
+				;;
+			1)	log_daemon_msg "$NAME was already running";
+				log_end_msg 0
+				;;
+			*)	# Failed to start
+				log_daemon_msg "$NAME could not be started";
+				log_end_msg 1
+				;;
 
-	esac
-	;;
-  stop)
-	log_daemon_msg "Stopping $NAME"
-	do_stop
-	case "$?" in
-		0)	log_end_msg 0 ;;
-		1)	log_daemon_msg "$NAME was already stopped";
-			log_end_msg 0 ;;
-		2)	# Failed to start
-			log_daemon_msg "$NAME could not be stopped";
-			log_end_msg 1
-			;;
-	esac
-	;;
-  status)
-       status_of_proc "$DAEMON" "$NAME" && exit 0 || exit $?
-       ;;
-  restart|force-reload)
-	#
-	# If the "reload" option is implemented then remove the
-	# 'force-reload' alias
-	#
-	log_daemon_msg "Restarting $NAME"
-	do_stop
-	case "$?" in
-		0)
-			do_start
-			case "$?" in
-				0)	log_end_msg 0 ;;
-				1)	log_daemon_msg "old $NAME is still running";
-					log_end_msg 1 ;; # Old process is still running
-				*)	log_daemon_msg "$NAME could not be started";
-					log_end_msg 1 ;; # Failed to start
-			esac
-		;;
-		
-		1)	log_daemon_msg "$NAME was not starting";
-			do_start
-			case "$?" in
-				0)	log_end_msg 0 ;;
-				1)	log_daemon_msg "old $NAME is still running";
-					log_end_msg 1 ;; # Old process is still running
-				*)	log_daemon_msg "$NAME could not be started";
-					log_end_msg 1 ;; # Failed to start
-			esac
-		;;
-
-		*)
-			# Failed to stop
-			log_daemon_msg "$NAME could not be stopped";
-			log_end_msg 1
-			;;
 		esac
 		;;
-  *)
-	echo "Usage: $SCRIPTNAME {start|stop|status|restart|force-reload}" >&2
-	exit 3
-	;;
+	stop)
+		log_daemon_msg "Stopping $NAME"
+		do_stop
+		case "$?" in
+			0)	log_end_msg 0
+				;;
+			1)	log_daemon_msg "$NAME was already stopped";
+				log_end_msg 0
+				;;
+			2)	# Failed to start
+				log_daemon_msg "$NAME could not be stopped";
+				log_end_msg 1
+				;;
+		esac
+		;;
+	status)
+		status_of_proc "$DAEMON" "$NAME" && exit 0 || exit $?
+		;;
+	restart|force-reload)
+		#
+		# If the "reload" option is implemented then remove the
+		# 'force-reload' alias
+		#
+		log_daemon_msg "Restarting $NAME"
+		do_stop
+		case "$?" in
+			0)
+				do_start
+				case "$?" in
+					0)	log_end_msg 0
+						;;
+					1)	log_daemon_msg "old $NAME is still running";
+						log_end_msg 1 ;; # Old process is still running
+					*)	log_daemon_msg "$NAME could not be started";
+						log_end_msg 1 ;; # Failed to start
+				esac
+				;;
+
+			1)	log_daemon_msg "$NAME was not starting";
+		    log_daemon_msg "Starting $NAME"
+				do_start
+				case "$?" in
+					0)	log_end_msg 0
+						;;
+					1)	log_daemon_msg "old $NAME is still running";
+						log_end_msg 1 ;; # Old process is still running
+					*)	log_daemon_msg "$NAME could not be started";
+						log_end_msg 1 ;; # Failed to start
+				esac
+				;;
+
+			*)
+				# Failed to stop
+				log_daemon_msg "$NAME could not be stopped";
+				log_end_msg 1
+				;;
+		esac
+		;;
+	*)
+		echo "Usage: $SCRIPTNAME {start|stop|status|restart|force-reload}" >&2
+		exit 2
+		;;
 esac
 
-:
+exit 0
