@@ -32,8 +32,8 @@
 #define SLEEP_TIME    0          //!<  0 sec
 #define SLEEP_TIME_NANO 20000000 //!< 20 msec
 
-int input[INPUT_NUM] ={0}; //!< ロギングしたキーを格納する配列
-short count   = 0;         //!< ロギングキーカウント
+int input[INPUT_NUM] ={0}; //!< ロギングしたキーの値を格納する配列
+short count   = 0;         //!< ロギングカウント
 short count_h = 0;         //!< "半角/全角"キーカウント
 
 static struct option options[] =
@@ -171,7 +171,7 @@ void version()
 }
 
 /**
- * キーボード入力をエミュレートする
+ * 指定されたファイルがキャラクタデバイスか判定する
  *
  * [ Linux Input Subsystemの使い方 ]( http://www.tatapa.org/~takuo/input_subsystem/input_subsystem.html )
  * @param[in] *st stat構造体のアドレス
