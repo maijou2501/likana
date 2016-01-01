@@ -1,8 +1,8 @@
 /**
- * rikana(http://suwa.6.ql.bz/rikana.html) for Linux
+ * rikana(http://suwa.6.ql.bz/rikana.html) for Linux.
  *
- * MIZUSHIKI 様が作成された IMEオン忘れ時打ち直しツール「りかなー」とほぼ同仕様の Linux 版りかなー。
- * IME(インプットメソッドエンジン)オンを忘れてタイプしてしまったらすかさず「半角/全角」キーを2連打。
+ * MIZUSHIKI 様が作成された IMEオン忘れ時打ち直しツール「りかなー」とほぼ同仕様の Linux 版りかなー.
+ * IME(インプットメソッドエンジン)オンを忘れてタイプしてしまったらすかさず「半角/全角」キーを2連打.
  * 直前の文字を打ち直しします.
  *
  * @file    likana.c
@@ -56,9 +56,10 @@ typedef struct {
 } THREAD_ARG;
 
 /**
- * 20 msec スリープする
+ * 20 msec スリープする.
  *
- * sleep関数では1秒からの指定なので、nanosleep関数を用いて 20 msec スリープさせる
+ * sleep関数では1秒からの指定なので、nanosleep関数を用いて 20 msec スリープさせる.
+ *
  * @param  なし
  * @return なし
  */
@@ -71,9 +72,10 @@ void mysleep()
 }
 
 /**
- * キーボード入力をエミュレートする
+ * キーボード入力をエミュレートする.
  *
- * [ Linux Input Subsystemの使い方 ]( http://www.tatapa.org/~takuo/input_subsystem/input_subsystem.html )
+ * [ Linux Input Subsystemの使い方 ]( http://www.tatapa.org/~takuo/input_subsystem/input_subsystem.html ).
+ *
  * @param[in] code  ロギングしたキーコード
  * @param[in] value 押下・開放の指定
  * @param[out] fd   出力先の指定
@@ -96,13 +98,14 @@ void write_key_event(int code, int value, int fd)
 }
 
 /**
- * マウスイベントを待ち受ける
+ * マウスイベントを待ち受ける.
  *
- * スレッドを用いてキーボードイベントとは別に、マウスイベントを待ち受ける。
+ * スレッドを用いてキーボードイベントとは別に、マウスイベントを待ち受ける.
  * [ pthread スレッドに値を渡す方法 - C言語入門 ]( http://kaworu.jpn.org/c/pthread_%E3%82%B9%E3%83%AC%E3%83%83%E3%83%89%E3%81%AB%E5%80%A4%E3%82%92%E6%B8%A1%E3%81%99%E6%96%B9%E6%B3%95 ).
+ *
  * @param[in] *arg pthread_createの第４引数のポインタ
  * @return    なし
- * @attention likana 起動中にマウスが切り離された際のハンドリングができていない
+ * @attention likana 起動中にマウスが切り離された際のハンドリングができていない.
  */
 void* thread_mouse(void *arg)
 {
@@ -144,8 +147,10 @@ void* thread_mouse(void *arg)
 }
 
 /**
- * 使い方の説明
+ * 使い方の説明.
  *
+ * 詳細説明は割愛します.
+ * 
  * @param  なし
  * @return なし
  */
@@ -160,7 +165,9 @@ void usage()
 }
 
 /**
- * バージョン情報の出力
+ * バージョン情報の出力.
+ *
+ * 詳細説明は割愛します.
  *
  * @param  なし
  * @return なし
@@ -171,9 +178,10 @@ void version()
 }
 
 /**
- * 指定されたファイルがキャラクタデバイスか判定する
+ * 指定されたファイルがキャラクタデバイスか判定する.
  *
- * [ Linux Input Subsystemの使い方 ]( http://www.tatapa.org/~takuo/input_subsystem/input_subsystem.html )
+ * [ Linux Input Subsystemの使い方 ]( http://www.tatapa.org/~takuo/input_subsystem/input_subsystem.html ).
+ *
  * @param[in] *st stat構造体のアドレス
  * @retval 0 チェックしたファイルがキャラクタデバイスだった
  * @retval 1 チェックしたファイルがキャラクタデバイスではなかった
@@ -188,13 +196,15 @@ int check_stat(struct stat *st)
 		}
 }
 /**
- * main関数
+ * main関数.
+ *
+ * 引数無しでは usage(). getopt_long() で使われなかった引数があった場合も usage().
  * 
  * @param[in] argc コマンドラインパラメータ数
  * @param[in] argv コマンドラインパラメータ
  * @retval    0     正常終了
  * @retval    0以外 異常終了
- * @attention likana 起動中にキーボードが切り離された際のハンドリングができていない
+ * @attention likana 起動中にキーボードが切り離された際のハンドリングができていない.
  */
 int main(int argc, char *argv[])
 {
