@@ -1,7 +1,11 @@
 /**
- * @file likana.c
+ * rikana(http://suwa.6.ql.bz/rikana.html) for linux
  *
- * @brief   rikana(http://suwa.6.ql.bz/rikana.html) for linux
+ * MIZUSHIKI 様が作成された IMEオン忘れ時打ち直しツール「りかなー」とほぼ同仕様の Linux 版りかなー。
+ * IME(インプットメソッドエンジン)オンを忘れてタイプしてしまったらすかさず「半角/全角」キーを2連打。
+ * 直前の文字を打ち直しします.
+ *
+ * @file    likana.c
  * @author  maijou2501
  * @date    2016/01/01
  * @version 1.3
@@ -17,28 +21,21 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-/** @def
- * version
- */
-#define VERSION "1.3"
+#define VERSION "1.3"      //!< バージョン情報
+#define PUSH    1          //!< キーボード押下判定の定義
+#define RELEASE 0          //!< キーボード開放判定の定義
+#define DETECT_KEY_CODE  0 //!< キーボード操作判定のための定義
+#define DETECT_KEY_VALUE 0 //!< マウス操作判定のための定義
+#define INPUT_NUM    60    //!< キーロギングの上限数
+#define HANKAKU_NUM   2    //!< "半角/全角"キー押下回数のしきい値
+#define INPUT_EVENTS 64    //!< キーイベント操作の上限数
+#define SLEEP_TIME    0          //!<  0 sec
+#define SLEEP_TIME_NANO 20000000 //!< 20 msec
 
-/** @def
- * PUSH
- */
-#define PUSH    1
+int input[INPUT_NUM] ={0}; //!< ロギングしたキーを格納する配列
+short count   = 0;         //!< ロギングキーカウント
+short count_h = 0;         //!< "半角/全角"キーカウント
 
-#define RELEASE 0
-#define DETECT_KEY_CODE  0
-#define DETECT_KEY_VALUE 0
-#define INPUT_NUM    60
-#define HANKAKU_NUM   2
-#define INPUT_EVENTS 64
-#define SLEEP_TIME    0          // 0  sec
-#define SLEEP_TIME_NANO 20000000 // 20 msec
-
-int input[INPUT_NUM] ={0}; //!< key logging array
-short count   = 0;         //!< key count
-short count_h = 0;         //!< "hankaku" key count
 static struct option options[] =
 {
 	{"help",     no_argument, NULL, 'h'},
@@ -46,17 +43,25 @@ static struct option options[] =
 	{"mouse",    no_argument, NULL, 'm'},
 	{"keyboard", required_argument, NULL, 'k'},
 	{0, 0, 0, 0}
-};
+}; //!< 長いオプションの名前を格納する構造体配列の初期化
 
-// for thread param
+static struct timespec req =
+{SLEEP_TIME, SLEEP_TIME_NANO}; //!< nanosleep のための構造体の宣言
+
+/**
+ * スレッドパラメータ定義
+ */
 typedef struct {
-	char *device;
+	char *device;   //!< character device pointer
 } THREAD_ARG;
 
-// for nanosleep
-static struct timespec req = {SLEEP_TIME, SLEEP_TIME_NANO};
-
-// sleep
+/**
+ * 20 msec スリープする
+ *
+ * sleep関数では1秒からの指定なので、nanosleep関数を用いて 20 msec スリープさせる
+ * @param  なし
+ * @return なし
+ */
 void mysleep()
 {
 	if (nanosleep(&req, NULL) == -1) {
@@ -64,7 +69,16 @@ void mysleep()
 		exit(EXIT_FAILURE);
 	}
 }
-// write key value to device file
+
+/**
+ * キーボード入力をエミュレートする
+ *
+ * [ Linux Input Subsystemの使い方 ]( http://www.tatapa.org/~takuo/input_subsystem/input_subsystem.html )
+ * @param[in] code  ロギングしたキーコード
+ * @param[in] value 押下・開放の指定
+ * @param[out] fd   出力先の指定
+ * @return なし
+ */
 void write_key_event(int code, int value, int fd)
 {
 	// define valiations
@@ -80,28 +94,16 @@ void write_key_event(int code, int value, int fd)
 		exit(EXIT_FAILURE);
 	}
 }
+
 /**
- *  * @fn
- *   * ここに関数の説明を書く
- *    * @brief 要約説明
- *     * @param (引数名) 引数の説明
- *      * @param (引数名) 引数の説明
- *       * @return 戻り値の説明
- *        * @sa 参照すべき関数を書けばリンクが貼れる
- *         * @detail 詳細な説明
- *          */
-/**
- * メモリ領域をコピーする
+ * マウスイベントを待ち受ける
  *
- * メモリ領域srtの先頭sizeバイトをメモリ領域dstへコピーする。
- * @param[out] dst コピー先のメモリ領域
- * @param[in] src コピー元のメモリ領域
- * @param[in] size コピーするバイト数
- * @return dstへのポインタ
- * @attention コピー先とコピー元の領域が重なる場合は
- *    memmoveを使用すること
+ * スレッドを用いてキーボードイベントとは別に、マウスイベントを待ち受ける。
+ * [ pthread スレッドに値を渡す方法 - C言語入門 ]( http://kaworu.jpn.org/c/pthread_%E3%82%B9%E3%83%AC%E3%83%83%E3%83%89%E3%81%AB%E5%80%A4%E3%82%92%E6%B8%A1%E3%81%99%E6%96%B9%E6%B3%95 ).
+ * @param[in] *arg pthread_createの第４引数のポインタ
+ * @return    なし
+ * @attention likana 起動中にマウスが切り離された際のハンドリングができていない
  */
-// capture mouse event thread
 void* thread_mouse(void *arg)
 {
 	// define valiations
@@ -141,7 +143,12 @@ void* thread_mouse(void *arg)
 	close(fd);
 }
 
-// print usage
+/**
+ * 使い方の説明
+ *
+ * @param  なし
+ * @return なし
+ */
 void usage()
 {
 	printf( "Usage: likana [option]... > /dev/input/event*\n"
@@ -152,12 +159,25 @@ void usage()
 		  );
 }
 
-// print version
+/**
+ * バージョン情報の出力
+ *
+ * @param  なし
+ * @return なし
+ */
 void version()
 {
 	printf( "likana version %s\n", VERSION);
 }
 
+/**
+ * キーボード入力をエミュレートする
+ *
+ * [ Linux Input Subsystemの使い方 ]( http://www.tatapa.org/~takuo/input_subsystem/input_subsystem.html )
+ * @param[in] *st stat構造体のアドレス
+ * @retval 0 チェックしたファイルがキャラクタデバイスだった
+ * @retval 1 チェックしたファイルがキャラクタデバイスではなかった
+ */
 int check_stat(struct stat *st)
 {
     mode_t m = st->st_mode;
@@ -167,7 +187,15 @@ int check_stat(struct stat *st)
 			return 1;
 		}
 }
-
+/**
+ * main関数
+ * 
+ * @param[in] argc コマンドラインパラメータ数
+ * @param[in] argv コマンドラインパラメータ
+ * @retval    0     正常終了
+ * @retval    0以外 異常終了
+ * @attention likana 起動中にキーボードが切り離された際のハンドリングができていない
+ */
 int main(int argc, char *argv[])
 {
 	// define valiations
@@ -327,7 +355,7 @@ int main(int argc, char *argv[])
 			}
 		}
 	}
-	// close device file of mouse
+	// close device file of keyboard
 	close(fd);
 	return EXIT_SUCCESS;
 }
