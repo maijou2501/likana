@@ -4,14 +4,14 @@ likana
 ## 概要
 
 MIZUSHIKI 様が作成された IMEオン忘れ時打ち直しツール「りかなー」と  
-ほぼ同仕様の Linux 版りかなー
+ほぼ同仕様の Linux 版りかなー。
 
 
 ## 使い方
 
 ※ 本家「りかなー」の使い方から一部変更し引用 (2連打の箇所 )
 
-IMEオンを忘れてタイプしてしまったらすかさず「半角/全角」キーを2連打。  
+IME(インプットメソッドエンジン)オンを忘れてタイプしてしまったらすかさず「半角/全角」キーを2連打。  
 直前の文字を打ち直しします。  
 
 
@@ -38,7 +38,7 @@ IMEオンを忘れてタイプしてしまったらすかさず「半角/全角�
 
 インストール
 
-```shell
+```sh
 sudo apt-add-repository ppa:maijou2501/likana
 sudo apt-get update
 sudo apt-get install likana
@@ -46,7 +46,7 @@ sudo apt-get install likana
 
 アンインストール
 
-```shell
+```sh
 sudo apt-get purge likana
 ```
 
@@ -55,7 +55,7 @@ sudo apt-get purge likana
 
 インストール ( /usr/src など、make を実行するディレクトリに移動してから )
 
-```shell
+```sh
 git clone https://github.com/maijou2501/likana
 cd likana
 make
@@ -64,7 +64,7 @@ sudo make install
 
 アンインストール
 
-```shell
+```sh
 sudo make uninstall
 ```
 
@@ -78,9 +78,9 @@ sudo make uninstall
 下記コマンドで調べたり、起動毎に割り当てが変わる場合は  
 udev ルールで固定化する必要があるかもしれません。
 
-```shell
-ll /dev/input/by-id
-ll /dev/input/by-path
+```sh
+ls -l /dev/input/by-id
+ls -l /dev/input/by-path
 ```
 
 
@@ -108,7 +108,8 @@ GPLv3 で配布しています。
 
 
 ## 更新履歴
-￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣
+
+* version 1.3 (2016/01/02 ) 引数のチェックを改良。セキュリティに配慮したコンパイル設定に変更した。
 * version 1.2 (2015/03/03 ) initスクリプト登録を、可能であれば insserv を用いるようにした
 * version 1.1 (2015/03/01 ) キー再生についてパラメータ調整を行った
 * version 1.0 (2015/02/28 ) 公開

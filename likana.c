@@ -1,12 +1,10 @@
 /**
+ * @file likana.c
  *
- * likana.c
- *
- * description : rikana(http://suwa.6.ql.bz/rikana.html) for linux
- * author  : maijou2501
- * update  : 2016/01/01
- * version : 1.3
- *
+ * @brief   rikana(http://suwa.6.ql.bz/rikana.html) for linux
+ * @author  maijou2501
+ * @date    2016/01/01
+ * @version 1.3
  */
 
 #include <stdio.h>
@@ -16,9 +14,19 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <linux/input.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
+/** @def
+ * version
+ */
 #define VERSION "1.3"
+
+/** @def
+ * PUSH
+ */
 #define PUSH    1
+
 #define RELEASE 0
 #define DETECT_KEY_CODE  0
 #define DETECT_KEY_VALUE 0
@@ -28,10 +36,9 @@
 #define SLEEP_TIME    0          // 0  sec
 #define SLEEP_TIME_NANO 20000000 // 20 msec
 
-// groval variations
-int input[INPUT_NUM] ={0};
-short count   = 0;
-short count_h = 0;
+int input[INPUT_NUM] ={0}; //!< key logging array
+short count   = 0;         //!< key count
+short count_h = 0;         //!< "hankaku" key count
 static struct option options[] =
 {
 	{"help",     no_argument, NULL, 'h'},
@@ -73,7 +80,27 @@ void write_key_event(int code, int value, int fd)
 		exit(EXIT_FAILURE);
 	}
 }
-
+/**
+ *  * @fn
+ *   * ここに関数の説明を書く
+ *    * @brief 要約説明
+ *     * @param (引数名) 引数の説明
+ *      * @param (引数名) 引数の説明
+ *       * @return 戻り値の説明
+ *        * @sa 参照すべき関数を書けばリンクが貼れる
+ *         * @detail 詳細な説明
+ *          */
+/**
+ * メモリ領域をコピーする
+ *
+ * メモリ領域srtの先頭sizeバイトをメモリ領域dstへコピーする。
+ * @param[out] dst コピー先のメモリ領域
+ * @param[in] src コピー元のメモリ領域
+ * @param[in] size コピーするバイト数
+ * @return dstへのポインタ
+ * @attention コピー先とコピー元の領域が重なる場合は
+ *    memmoveを使用すること
+ */
 // capture mouse event thread
 void* thread_mouse(void *arg)
 {
@@ -131,15 +158,25 @@ void version()
 	printf( "likana version %s\n", VERSION);
 }
 
+int check_stat(struct stat *st)
+{
+    mode_t m = st->st_mode;
+    if (S_ISCHR(m)){
+			return 0;
+		} else {
+			return 1;
+		}
+}
 
 int main(int argc, char *argv[])
 {
 	// define valiations
 	short i;
 	short j;
-	char c;
-	int index;
-	char *keyboard;
+	int   index;
+	char  c;
+	char  *keyboard;
+	struct stat st;
 	struct input_event events[INPUT_EVENTS];
 	pthread_t th;
 	THREAD_ARG thread_arg;
@@ -163,10 +200,29 @@ int main(int argc, char *argv[])
 				exit(EXIT_SUCCESS);
 
 			case 'k':
+				// check character device
+				if (stat(optarg, &st) == -1) {
+					perror("stat_keyboard");
+					exit(EXIT_FAILURE);
+				}
+				if (check_stat(&st) != 0){
+					printf( "%s is NOT a character device\n", optarg);
+					exit(EXIT_FAILURE);
+				}
 				keyboard = optarg;
 				break;
 
 			case 'm':
+				// check character device
+				if (stat(optarg, &st) == -1) {
+					perror("stat_mouse");
+					exit(EXIT_FAILURE);
+				}
+				if (check_stat(&st) != 0){
+					printf( "%s is NOT a character device\n", optarg);
+					exit(EXIT_FAILURE);
+				}
+
 				// thread of mouse event loop
 				thread_arg.device = (char *)optarg;
 				pthread_create( &th, NULL, thread_mouse, &thread_arg );
