@@ -1,5 +1,5 @@
 /**
- * rikana(http://suwa.6.ql.bz/rikana.html) for linux
+ * rikana(http://suwa.6.ql.bz/rikana.html) for Linux
  *
  * MIZUSHIKI 様が作成された IMEオン忘れ時打ち直しツール「りかなー」とほぼ同仕様の Linux 版りかなー。
  * IME(インプットメソッドエンジン)オンを忘れてタイプしてしまったらすかさず「半角/全角」キーを2連打。
@@ -106,7 +106,7 @@ void write_key_event(int code, int value, int fd)
  */
 void* thread_mouse(void *arg)
 {
-	// define valiations
+	// define variations
 	short i;
 	short j;
 	struct input_event events[INPUT_EVENTS];
@@ -115,7 +115,7 @@ void* thread_mouse(void *arg)
 	// pthread detach
 	pthread_t self_thread = pthread_self();
 	if (pthread_detach(self_thread) != 0) {
-		perror("detatch");
+		perror("detach");
 		exit(EXIT_FAILURE);
 	}
 
@@ -198,7 +198,7 @@ int check_stat(struct stat *st)
  */
 int main(int argc, char *argv[])
 {
-	// define valiations
+	// define variations
 	short i;
 	short j;
 	int   index;
@@ -261,7 +261,7 @@ int main(int argc, char *argv[])
 				exit(EXIT_FAILURE);
 
 			default:
-				// invalit option
+				// invalid option
 				exit(EXIT_FAILURE);
 		}
 	}
@@ -296,7 +296,7 @@ int main(int argc, char *argv[])
 				mysleep();
 			}
 
-			// press hankaku/zenkaku bottun
+			// press hankaku/zenkaku button
 			write_key_event( KEY_GRAVE, PUSH, STDOUT_FILENO);
 			mysleep();
 			write_key_event( KEY_GRAVE, RELEASE, STDOUT_FILENO);
@@ -313,7 +313,7 @@ int main(int argc, char *argv[])
 			count = 0;
 		}
 
-		// open device file of keybord
+		// open device file of keyboard
 		size_t read_size = read(fd, events, sizeof(events));
 		for (i = 0; i < (int)(read_size / sizeof(struct input_event)); i++){
 			// detect key up event
