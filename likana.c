@@ -74,7 +74,7 @@ void mysleep()
 /**
  * キーボード入力をエミュレートする.
  *
- * [ Linux Input Subsystemの使い方 ]( http://www.tatapa.org/~takuo/input_subsystem/input_subsystem.html ).
+ * Linux Input Subsystem を用いている.
  *
  * @param[in] code  ロギングしたキーコード
  * @param[in] value 押下・開放の指定
@@ -100,8 +100,8 @@ void write_key_event(int code, int value, int fd)
 /**
  * マウスイベントを待ち受ける.
  *
- * スレッドを用いてキーボードイベントとは別に、マウスイベントを待ち受ける.
- * [ pthread スレッドに値を渡す方法 - C言語入門 ]( http://kaworu.jpn.org/c/pthread_%E3%82%B9%E3%83%AC%E3%83%83%E3%83%89%E3%81%AB%E5%80%A4%E3%82%92%E6%B8%A1%E3%81%99%E6%96%B9%E6%B3%95 ).
+ * スレッドを用いてキーボードイベントとは別に,マウスイベントを待ち受ける.
+ * pthread スレッドに値を渡すために,構造体を使っている.
  *
  * @param[in] *arg pthread_createの第４引数のポインタ
  * @return    なし
@@ -180,7 +180,7 @@ void version()
 /**
  * 指定されたファイルがキャラクタデバイスか判定する.
  *
- * [ Linux Input Subsystemの使い方 ]( http://www.tatapa.org/~takuo/input_subsystem/input_subsystem.html ).
+ * <sys/types.h> , <sys/stat.h> の include が必要.
  *
  * @param[in] *st stat構造体のアドレス
  * @retval 0 チェックしたファイルがキャラクタデバイスだった
