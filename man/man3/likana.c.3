@@ -1,0 +1,282 @@
+.TH "likana.c" 3 "Sat Jan 2 2016" "likana" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+likana.c \- 
+.PP
+rikana(http://suwa.6.ql.bz/rikana.html) for Linux\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <getopt\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include <linux/input\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+
+.SS "データ構造"
+
+.in +1c
+.ti -1c
+.RI "struct \fBTHREAD_ARG\fP"
+.br
+.RI "\fIスレッドパラメータ定義 \fP"
+.in -1c
+.SS "マクロ定義"
+
+.in +1c
+.ti -1c
+.RI "#define \fBVERSION\fP   '1\&.3'"
+.br
+.RI "\fIバージョン情報 \fP"
+.ti -1c
+.RI "#define \fBPUSH\fP   1"
+.br
+.RI "\fIキーボード押下判定の定義 \fP"
+.ti -1c
+.RI "#define \fBRELEASE\fP   0"
+.br
+.RI "\fIキーボード開放判定の定義 \fP"
+.ti -1c
+.RI "#define \fBDETECT_KEY_CODE\fP   0"
+.br
+.RI "\fIキーボード操作判定のための定義 \fP"
+.ti -1c
+.RI "#define \fBDETECT_KEY_VALUE\fP   0"
+.br
+.RI "\fIマウス操作判定のための定義 \fP"
+.ti -1c
+.RI "#define \fBINPUT_NUM\fP   60"
+.br
+.RI "\fIキーロギングの上限数 \fP"
+.ti -1c
+.RI "#define \fBHANKAKU_NUM\fP   2"
+.br
+.RI "\fI'半角/全角'キー押下回数のしきい値 \fP"
+.ti -1c
+.RI "#define \fBINPUT_EVENTS\fP   64"
+.br
+.RI "\fIキーイベント操作の上限数 \fP"
+.ti -1c
+.RI "#define \fBSLEEP_TIME\fP   0"
+.br
+.RI "\fI0 sec \fP"
+.ti -1c
+.RI "#define \fBSLEEP_TIME_NANO\fP   20000000"
+.br
+.RI "\fI20 msec \fP"
+.in -1c
+.SS "関数"
+
+.in +1c
+.ti -1c
+.RI "void \fBmysleep\fP ()"
+.br
+.RI "\fI20 msec スリープする\&. \fP"
+.ti -1c
+.RI "void \fBwrite_key_event\fP (int code, int value, int fd)"
+.br
+.RI "\fIキーボード入力をエミュレートする\&. \fP"
+.ti -1c
+.RI "void * \fBthread_mouse\fP (void *arg)"
+.br
+.RI "\fIマウスイベントを待ち受ける\&. \fP"
+.ti -1c
+.RI "void \fBusage\fP ()"
+.br
+.RI "\fI使い方の説明\&. \fP"
+.ti -1c
+.RI "void \fBversion\fP ()"
+.br
+.RI "\fIバージョン情報の出力\&. \fP"
+.ti -1c
+.RI "int \fBcheck_stat\fP (struct stat *st)"
+.br
+.RI "\fI指定されたファイルがキャラクタデバイスか判定する\&. \fP"
+.ti -1c
+.RI "int \fBmain\fP (int argc, char *argv[])"
+.br
+.RI "\fImain関数\&. \fP"
+.in -1c
+.SS "変数"
+
+.in +1c
+.ti -1c
+.RI "int \fBinput\fP [\fBINPUT_NUM\fP] = {0}"
+.br
+.RI "\fIロギングしたキーの値を格納する配列 \fP"
+.ti -1c
+.RI "short \fBcount\fP = 0"
+.br
+.RI "\fIロギングカウント \fP"
+.ti -1c
+.RI "short \fBcount_h\fP = 0"
+.br
+.RI "\fI'半角/全角'キーカウント \fP"
+.in -1c
+.SH "説明"
+.PP 
+rikana(http://suwa.6.ql.bz/rikana.html) for Linux\&. 
+
+MIZUSHIKI 様が作成された IMEオン忘れ時打ち直しツール「りかなー」とほぼ同仕様の Linux 版りかなー\&. IME(インプットメソッドエンジン)オンを忘れてタイプしてしまったらすかさず「半角/全角」キーを2連打\&. 直前の文字を打ち直しします\&.
+.PP
+\fB作者:\fP
+.RS 4
+maijou2501 
+.RE
+.PP
+\fB日付:\fP
+.RS 4
+2016/01/01 
+.RE
+.PP
+\fBバージョン:\fP
+.RS 4
+1\&.3 
+.RE
+.PP
+
+.SH "関数"
+.PP 
+.SS "int \fBcheck_stat\fP (struct stat *st)"
+.PP
+指定されたファイルがキャラクタデバイスか判定する\&. <sys/types\&.h> , <sys/stat\&.h> の include が必要\&.
+.PP
+\fB引数:\fP
+.RS 4
+\fI*st\fP stat構造体のアドレス 
+.RE
+.PP
+\fB戻り値:\fP
+.RS 4
+\fI0\fP チェックしたファイルがキャラクタデバイスだった 
+.br
+\fI1\fP チェックしたファイルがキャラクタデバイスではなかった 
+.RE
+.PP
+
+.SS "int \fBmain\fP (intargc, char *argv[])"
+.PP
+main関数\&. 引数無しでは \fBusage()\fP\&. getopt_long() で使われなかった引数があった場合も \fBusage()\fP\&.
+.PP
+\fB引数:\fP
+.RS 4
+\fIargc\fP コマンドラインパラメータ数 
+.br
+\fIargv\fP コマンドラインパラメータ 
+.RE
+.PP
+\fB戻り値:\fP
+.RS 4
+\fI0\fP 正常終了 
+.br
+\fI0以外\fP 異常終了 
+.RE
+.PP
+\fB注意:\fP
+.RS 4
+likana 起動中にキーボードが切り離された際のハンドリングができていない\&. 
+.RE
+.PP
+
+.SS "void \fBmysleep\fP ()"
+.PP
+20 msec スリープする\&. sleep関数では1秒からの指定なので、nanosleep関数を用いて 20 msec スリープさせる\&.
+.PP
+\fB引数:\fP
+.RS 4
+\fIなし\fP 
+.RE
+.PP
+\fB戻り値:\fP
+.RS 4
+なし 
+.RE
+.PP
+
+.SS "void* \fBthread_mouse\fP (void *arg)"
+.PP
+マウスイベントを待ち受ける\&. スレッドを用いてキーボードイベントとは別に,マウスイベントを待ち受ける\&. pthread スレッドに値を渡すために,構造体を使っている\&.
+.PP
+\fB引数:\fP
+.RS 4
+\fI*arg\fP pthread_createの第４引数のポインタ 
+.RE
+.PP
+\fB戻り値:\fP
+.RS 4
+なし 
+.RE
+.PP
+\fB注意:\fP
+.RS 4
+likana 起動中にマウスが切り離された際のハンドリングができていない\&. 
+.RE
+.PP
+
+.SS "void \fBusage\fP ()"
+.PP
+使い方の説明\&. 詳細説明は割愛します\&.
+.PP
+\fB引数:\fP
+.RS 4
+\fIなし\fP 
+.RE
+.PP
+\fB戻り値:\fP
+.RS 4
+なし 
+.RE
+.PP
+
+.SS "void \fBversion\fP ()"
+.PP
+バージョン情報の出力\&. 詳細説明は割愛します\&.
+.PP
+\fB引数:\fP
+.RS 4
+\fIなし\fP 
+.RE
+.PP
+\fB戻り値:\fP
+.RS 4
+なし 
+.RE
+.PP
+
+.SS "void \fBwrite_key_event\fP (intcode, intvalue, intfd)"
+.PP
+キーボード入力をエミュレートする\&. Linux Input Subsystem を用いている\&.
+.PP
+\fB引数:\fP
+.RS 4
+\fIcode\fP ロギングしたキーコード 
+.br
+\fIvalue\fP 押下・開放の指定 
+.br
+\fIfd\fP 出力先の指定 
+.RE
+.PP
+\fB戻り値:\fP
+.RS 4
+なし 
+.RE
+.PP
+
+.SH "作者"
+.PP 
+likanaのソースから Doxygen により生成しました。
