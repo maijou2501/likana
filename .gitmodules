@@ -1,0 +1,3 @@
+[submodule "git@github.com:maijou2501/likana.git"]
+	path = git@github.com:maijou2501/likana.git
+	url = git@github.com:maijou2501/likana.git
