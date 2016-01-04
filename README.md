@@ -87,7 +87,7 @@ lrwxrwxrwx 1 root root   9  1月  4 22:24 usb-Lite-On_Technology_Corp._ThinkPad_
 上記の場合は、/etc/default/likana に下記のように設定します。
 
 ```
-LIKANA_KEYBOARD=/dev/input/event3$
+LIKANA_KEYBOARD=/dev/input/event3
 LIKANA_MOUSE=/dev/input/event4
 ```
 
