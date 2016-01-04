@@ -80,7 +80,24 @@ udev ルールで固定化する必要があるかもしれません。
 
 ```sh
 ls -l /dev/input/by-id
-ls -l /dev/input/by-path
+lrwxrwxrwx 1 root root   9  1月  4 22:24 usb-Lite-On_Technology_Corp._ThinkPad_USB_Keyboard_with_TrackPoint-event-kbd -> ../event3
+lrwxrwxrwx 1 root root   9  1月  4 22:24 usb-Lite-On_Technology_Corp._ThinkPad_USB_Keyboard_with_TrackPoint-if01-event-mouse -> ../event4
+```
+
+上記の場合は、/etc/default/likana に下記のように設定します。
+
+```
+LIKANA_KEYBOARD=/dev/input/event3$
+LIKANA_MOUSE=/dev/input/event4
+```
+
+
+または /dev/input/event* ではなく、下記指定も可能です。  
+(キーボードとマウスのキャラクタデバイスのチェックを、lstat() ではなく stat() でチェックしているため。)
+
+```
+LIKANA_KEYBOARD=/dev/input/by-id/usb-Lite-On_Technology_Corp._ThinkPad_USB_Keyboard_with_TrackPoint-event-kbd
+LIKANA_MOUSE=/dev/input/by-id/usb-Lite-On_Technology_Corp._ThinkPad_USB_Keyboard_with_TrackPoint-if01-event-mouse
 ```
 
 
