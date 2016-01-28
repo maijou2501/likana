@@ -1,0 +1,6 @@
+language: c
+compiler:
+  - gcc
+git:
+  submodules: false
+script: ./configure && make && make check

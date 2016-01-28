@@ -1,8 +1,7 @@
 CC = gcc
-CFLAGS = -O3 -s -fstack-protector-all -fPIE -pie -ffunction-sections -fdata-sections
+CFLAGS = -O3 -s -fstack-protector-all -fPIE -pie -ffunction-sections -fdata-sections -pthread
 LDFLAGS = -Wl,-z,now,-z,relro,--gc-sections$
-LOADLIBES = -pthread
-BINDIR=/usr/sbin
+BINDIR=/usr/local/bin
 NAME=likana
 
 ${NAME}:
@@ -10,8 +9,8 @@ ${NAME}:
 install:
 	install -d ${DESTDIR}${BINDIR}
 	install -m 755 -g root -o root ${NAME} ${DESTDIR}${BINDIR}
-	install -m 755 -g root -o root ./etc/init.d/${NAME} ${DESTDIR}/etc/init.d
-	install -m 755 -g root -o root ./etc/default/${NAME} ${DESTDIR}/etc/default
+	install -m 755 -g root -o root ./etc/init.d/${NAME}  ${DESTDIR}/etc/init.d
+	install -m 644 -g root -o root ./etc/default/${NAME} ${DESTDIR}/etc/default
 
 uninstall:
 	rm -f ${BINDIR}/${NAME}
