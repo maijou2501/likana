@@ -55,7 +55,9 @@ sudo apt-get purge likana
 
 ### make してインストール・アンインストール
 
-#### インストール ( /usr/local/src など、make を実行するディレクトリに移動してから )
+#### インストール
+
+/usr/local/src など、`make`を実行するディレクトリに移動して作業を行う。
 
 ```sh
 git clone https://github.com/maijou2501/likana
@@ -75,7 +77,9 @@ sudo make uninstall
 
 ### ./configure してインストール・アンインストール
 
-#### インストール ( /usr/local/src など、./configure を実行するディレクトリに移動してから )
+#### インストール 
+
+`/usr/local/src` など、./configure を実行するディレクトリに移動して作業を行う。
 
 ```sh
 git clone https://github.com/maijou2501/likana
@@ -84,7 +88,7 @@ cd likana
 ```
 
 デフォルトでは /usr/local/bin に実行ファイルが配置されます。  
-任意の場所にインストールする場合は`./configure --prefix=/`を実行します。
+任意の場所にインストールする場合は`./configure --prefix=/target/dir`を実行します。
 
 #### アンインストール
 
