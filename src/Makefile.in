@@ -212,8 +212,8 @@ install-binPROGRAMS: $(bin_PROGRAMS)
 	      $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files "$(DESTDIR)$(bindir)$$dir" || exit $$?; \
 	    } \
 	; done; \
-	test -e /etc/init.d  && install -m 755 -g root -o root ./etc/init.d/likana  /etc/init.d; \
-	test -e /etc/default && install -m 644 -g root -o root ./etc/default/likana /etc/default
+	test -e $(DESTDIR)/etc/init.d  && install -m 755 -g root -o root ./etc/init.d/likana  $(DESTDIR)/etc/init.d; \
+	test -e $(DESTDIR)/etc/default && install -m 644 -g root -o root ./etc/default/likana $(DESTDIR)/etc/default
 
 uninstall-binPROGRAMS:
 	@$(NORMAL_UNINSTALL)
@@ -224,15 +224,15 @@ uninstall-binPROGRAMS:
 	test -n "$$list" || exit 0; \
 	echo " ( cd '$(DESTDIR)$(bindir)' && rm -f" $$files ")"; \
 	cd "$(DESTDIR)$(bindir)" && rm -f $$files; \
-	test -e /etc/init.d/likana  && rm -f /etc/init.d/likana; \
-	test -e /etc/default/likana && rm -f /etc/default/likana; \
-	test -e /etc/rc0.d/*likana  && rm -f /etc/rc0.d/*likana; \
-	test -e /etc/rc1.d/*likana  && rm -f /etc/rc1.d/*likana; \
-	test -e /etc/rc2.d/*likana  && rm -f /etc/rc2.d/*likana; \
-	test -e /etc/rc3.d/*likana  && rm -f /etc/rc3.d/*likana; \
-	test -e /etc/rc4.d/*likana  && rm -f /etc/rc4.d/*likana; \
-	test -e /etc/rc5.d/*likana  && rm -f /etc/rc5.d/*likana; \
-	test -e /etc/rc6.d/*likana  && rm -f /etc/rc6.d/*likana
+	test -e $(DESTDIR)/etc/init.d/likana  && rm -f $(DESTDIR)/etc/init.d/likana; \
+	test -e $(DESTDIR)/etc/default/likana && rm -f $(DESTDIR)/etc/default/likana; \
+	test -e $(DESTDIR)/etc/rc0.d/*likana  && rm -f $(DESTDIR)/etc/rc0.d/*likana; \
+	test -e $(DESTDIR)/etc/rc1.d/*likana  && rm -f $(DESTDIR)/etc/rc1.d/*likana; \
+	test -e $(DESTDIR)/etc/rc2.d/*likana  && rm -f $(DESTDIR)/etc/rc2.d/*likana; \
+	test -e $(DESTDIR)/etc/rc3.d/*likana  && rm -f $(DESTDIR)/etc/rc3.d/*likana; \
+	test -e $(DESTDIR)/etc/rc4.d/*likana  && rm -f $(DESTDIR)/etc/rc4.d/*likana; \
+	test -e $(DESTDIR)/etc/rc5.d/*likana  && rm -f $(DESTDIR)/etc/rc5.d/*likana; \
+	test -e $(DESTDIR)/etc/rc6.d/*likana  && rm -f $(DESTDIR)/etc/rc6.d/*likana
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)

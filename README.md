@@ -1,6 +1,8 @@
 likana
 ======
 
+[![Build Status](https://travis-ci.org/maijou2501/likana.svg?branch=master)](https://travis-ci.org/maijou2501/likana)
+
 ## 概要
 
 MIZUSHIKI 様が作成された IMEオン忘れ時打ち直しツール「りかなー」と  
@@ -36,7 +38,7 @@ IME(インプットメソッドエンジン)オンを忘れてタイプしてし
 
 ### PPA に公開されたパッケージからインストール・アンインストール
 
-インストール
+#### インストール
 
 ```sh
 sudo apt-add-repository ppa:maijou2501/likana
@@ -44,7 +46,7 @@ sudo apt-get update
 sudo apt-get install likana
 ```
 
-アンインストール
+#### アンインストール
 
 ```sh
 sudo apt-get purge likana
@@ -53,16 +55,38 @@ sudo apt-get purge likana
 
 ### make してインストール・アンインストール
 
-インストール ( /usr/src など、make を実行するディレクトリに移動してから )
+#### インストール ( /usr/local/src など、make を実行するディレクトリに移動してから )
+
+```sh
+git clone https://github.com/maijou2501/likana
+cd likana/src
+mv Makefile.bak Makefile
+make && sudo make install
+```
+
+※ インストール先に書き込み権限があれば、`sudo`は必要ありません。(これ以降の手順でも同様です。)
+
+#### アンインストール
+
+```sh
+sudo make uninstall
+```
+
+
+### ./configure してインストール・アンインストール
+
+#### インストール ( /usr/local/src など、./configure を実行するディレクトリに移動してから )
 
 ```sh
 git clone https://github.com/maijou2501/likana
 cd likana
-make
-sudo make install
+./configure && make && sudo make install
 ```
 
-アンインストール
+デフォルトでは /usr/local/bin に実行ファイルが配置されます。  
+任意の場所にインストールする場合は`./configure --prefix=/`を実行します。
+
+#### アンインストール
 
 ```sh
 sudo make uninstall
