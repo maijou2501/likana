@@ -23,7 +23,7 @@ IME(インプットメソッドエンジン)オンを忘れてタイプしてし
 2. "半角/全角キー" を2連打
 3. IMEオンになり、「うちなおしてすと」で変換候補が出る
 
-![demo_likana_gif](https://github.com/maijou2501/maijou2501.github.io/blob/master/image/likana.gif)
+![ likana.gif ](https://github.com/maijou2501/maijou2501.github.io/blob/master/image/likana.gif)
 
 ## 動作要件
 
@@ -102,7 +102,7 @@ sudo make uninstall
 /etc/default/likana で起動時のサービス実行の有無、  
 キーボードとマウスの設定等を行なってください。
 
-キーボードとマウスの /dev/input/event* 割り当ては  
+キーボードとマウスの /dev/input/eventX 割り当ては  
 下記コマンドで調べたり、起動毎に割り当てが変わる場合は  
 udev ルールで固定化する必要があるかもしれません。
 
@@ -120,7 +120,7 @@ LIKANA_MOUSE=/dev/input/event4
 ```
 
 
-または /dev/input/event* ではなく、下記指定も可能です。  
+または /dev/input/eventX ではなく、下記指定も可能です。  
 (キーボードとマウスのキャラクタデバイスのチェックを、lstat() ではなく stat() でチェックしているため。)
 
 ```
