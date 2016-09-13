@@ -214,6 +214,8 @@ install-binPROGRAMS: $(bin_PROGRAMS)
 	; done; \
 	test -e $(DESTDIR)/etc/init.d  && install -m 755 -g root -o root ./etc/init.d/likana  $(DESTDIR)/etc/init.d; \
 	test -e $(DESTDIR)/etc/default && install -m 644 -g root -o root ./etc/default/likana $(DESTDIR)/etc/default
+	test -e ${DESTDIR}/etc/udev/rules.d && install -m 644 -g root -o root ../etc/udev/rules.d/50-${NAME}.rules ${DESTDIR}/etc/udev/rules.d
+
 
 uninstall-binPROGRAMS:
 	@$(NORMAL_UNINSTALL)
@@ -226,6 +228,7 @@ uninstall-binPROGRAMS:
 	cd "$(DESTDIR)$(bindir)" && rm -f $$files; \
 	test -e $(DESTDIR)/etc/init.d/likana  && rm -f $(DESTDIR)/etc/init.d/likana; \
 	test -e $(DESTDIR)/etc/default/likana && rm -f $(DESTDIR)/etc/default/likana; \
+	test -e ${DESTDIR}/etc/udev/rules.d/50-likana.rules && rm -f $(DESTDIR)/etc/default/udev/rules.d/50-likana.rules
 	test -e $(DESTDIR)/etc/rc0.d/*likana  && rm -f $(DESTDIR)/etc/rc0.d/*likana; \
 	test -e $(DESTDIR)/etc/rc1.d/*likana  && rm -f $(DESTDIR)/etc/rc1.d/*likana; \
 	test -e $(DESTDIR)/etc/rc2.d/*likana  && rm -f $(DESTDIR)/etc/rc2.d/*likana; \

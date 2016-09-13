@@ -11,11 +11,13 @@ install:
 	test -e ${DESTDIR}${BINDIR}    && install -m 755 -g root -o root ${NAME} ${DESTDIR}${BINDIR}
 	test -e ${DESTDIR}/etc/init.d  && install -m 755 -g root -o root ../etc/init.d/${NAME}  ${DESTDIR}/etc/init.d
 	test -e ${DESTDIR}/etc/default && install -m 644 -g root -o root ../etc/default/${NAME} ${DESTDIR}/etc/default
+	test -e ${DESTDIR}/etc/udev/rules.d && install -m 644 -g root -o root ../etc/udev/rules.d/50-${NAME}.rules ${DESTDIR}/etc/udev/rules.d
 
 uninstall:
 	test -e ${DESTDIR}/etc/init.d/${NAME}  && rm -f ${BINDIR}/${NAME}
 	test -e ${DESTDIR}/etc/init.d/${NAME}  && rm -f /etc/init.d/${NAME}
 	test -e ${DESTDIR}/etc/default/${NAME} && rm -f /etc/default/${NAME}
+	test -e ${DESTDIR}/etc/udev/rules.d/50-${NAME}.rules && rm -f /etc/default/udev/rules.d/50-${NAME}.rules
 	rm -f   ${DESTDIR}/etc/rc*.d/*${NAME}
 
 clean:

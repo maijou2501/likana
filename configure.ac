@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([likana], [1.3], [maijou2501@gmail.com])
+AC_INIT([likana], [1.4], [maijou2501@gmail.com])
 AC_CONFIG_AUX_DIR([config/gnu])
 AM_INIT_AUTOMAKE([foreign 1.11.3])
 

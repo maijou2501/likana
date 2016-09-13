@@ -8,8 +8,8 @@
  *
  * @file    likana.c
  * @author  maijou2501
- * @date    2016/01/01
- * @version 1.3
+ * @date    2016/09/13
+ * @version 1.4
  */
 
 #include <stdio.h>
@@ -22,7 +22,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#define VERSION "1.3"      //!< バージョン情報
+#define VERSION "1.4"      //!< バージョン情報
 #define PUSH    1          //!< キーボード押下判定の定義
 #define RELEASE 0          //!< キーボード開放判定の定義
 #define DETECT_KEY_CODE  0 //!< キーボード操作判定のための定義
@@ -84,7 +84,7 @@ void mysleep()
  */
 void write_key_event(int code, int value, int fd)
 {
-	// define valiations
+	// define variations
 	struct input_event key_event;
 	gettimeofday(&key_event.time, NULL);
 	key_event.type = EV_KEY;
@@ -104,7 +104,7 @@ void write_key_event(int code, int value, int fd)
  * スレッドを用いてキーボードイベントとは別に,マウスイベントを待ち受ける.
  * pthread スレッドに値を渡すために,構造体を使っている.
  *
- * @param[in] *arg pthread_createの第４引数のポインタ
+ * @param[in] *arg pthread_createの第4引数のポインタ
  * @return    なし
  * @attention likana 起動中にマウスが切り離された際のハンドリングができていない.
  */
