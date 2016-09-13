@@ -14,10 +14,10 @@ install:
 	test -e ${DESTDIR}/etc/udev/rules.d && install -m 644 -g root -o root ../etc/udev/rules.d/50-${NAME}.rules ${DESTDIR}/etc/udev/rules.d
 
 uninstall:
-	test -e ${DESTDIR}/etc/init.d/${NAME}  && rm -f ${BINDIR}/${NAME}
-	test -e ${DESTDIR}/etc/init.d/${NAME}  && rm -f /etc/init.d/${NAME}
-	test -e ${DESTDIR}/etc/default/${NAME} && rm -f /etc/default/${NAME}
-	test -e ${DESTDIR}/etc/udev/rules.d/50-${NAME}.rules && rm -f /etc/default/udev/rules.d/50-${NAME}.rules
+	test -e ${DESTDIR}${BINDIR}/${NAME}  && rm -f ${DESTDIR}${BINDIR}/${NAME}
+	test -e ${DESTDIR}/etc/init.d/${NAME}  && rm -f ${DESTDIR}/etc/init.d/${NAME}
+	test -e ${DESTDIR}/etc/default/${NAME} && rm -f ${DESTDIR}/etc/default/${NAME}
+	test -e ${DESTDIR}/etc/udev/rules.d/*${NAME}.rules && rm -f ${DESTDIR}/etc/default/udev/rules.d/*${NAME}.rules
 	rm -f   ${DESTDIR}/etc/rc*.d/*${NAME}
 
 clean:
