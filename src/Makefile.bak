@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -O3 -s -fstack-protector-all -fPIE -pie -ffunction-sections -fdata-sections -pthread
 LDFLAGS = -Wl,-z,now,-z,relro,--gc-sections$
-BINDIR=/usr/local/bin
+BINDIR=/usr/bin
 NAME=likana
 
 ${NAME}:

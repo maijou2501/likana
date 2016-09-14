@@ -87,7 +87,7 @@ cd likana
 ./configure && make && sudo make install
 ```
 
-デフォルトでは /usr/local/bin に実行ファイルが配置されます。  
+デフォルトでは /usr/bin に実行ファイルが配置されます。  
 任意の場所にインストールする場合は`./configure --prefix=/target/dir`を実行します。
 
 #### アンインストール
