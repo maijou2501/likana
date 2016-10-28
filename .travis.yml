@@ -3,4 +3,5 @@ compiler:
   - gcc
 git:
   submodules: false
+dist: xenial
 script: ./configure && make && make check
