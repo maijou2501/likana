@@ -9,15 +9,18 @@ ${NAME}:
 install:
 	install -d ${DESTDIR}${BINDIR}
 	test -e ${DESTDIR}${BINDIR}    && install -m 755 -g root -o root ${NAME} ${DESTDIR}${BINDIR}
-	test -e ${DESTDIR}/etc/init.d  && install -m 755 -g root -o root ../etc/init.d/${NAME}  ${DESTDIR}/etc/init.d
 	test -e ${DESTDIR}/etc/default && install -m 644 -g root -o root ../etc/default/${NAME} ${DESTDIR}/etc/default
-	test -e ${DESTDIR}/etc/udev/rules.d && install -m 644 -g root -o root ../etc/udev/rules.d/50-${NAME}.rules ${DESTDIR}/etc/udev/rules.d
+	test -e ${DESTDIR}/etc/init.d  && install -m 755 -g root -o root ../etc/init.d/${NAME} ${DESTDIR}/etc/init.d
+	test -e ${DESTDIR}/usr/lib/systemd/system && install -m 755 -g root -o root ../usr/lib/systemd/system/${NAME} ${DESTDIR}/usr/lib/systemd/system
+	test -e ${DESTDIR}/lib/udev/rules.d       && install -m 644 -g root -o root ../lib/udev/rules.d/60-${NAME}.rules ${DESTDIR}/lib/udev/rules.d
 
 uninstall:
-	test -e ${DESTDIR}${BINDIR}/${NAME}  && rm -f ${DESTDIR}${BINDIR}/${NAME}
+	test -e ${DESTDIR}${BINDIR}/${NAME}    && rm -f ${DESTDIR}${BINDIR}/${NAME}
 	test -e ${DESTDIR}/etc/init.d/${NAME}  && rm -f ${DESTDIR}/etc/init.d/${NAME}
 	test -e ${DESTDIR}/etc/default/${NAME} && rm -f ${DESTDIR}/etc/default/${NAME}
-	test -e ${DESTDIR}/etc/udev/rules.d/*${NAME}.rules && rm -f ${DESTDIR}/etc/default/udev/rules.d/*${NAME}.rules
+	test -e ${DESTDIR}/usr/lib/systemd/system/${NAME}.service && rm -f ${DESTDIR}/usr/lib/systemd/system/${NAME}.service
+	test -e ${DESTDIR}/etc/udev/rules.d/*${NAME}.rules && rm -f ${DESTDIR}/etc/udev/rules.d/*${NAME}.rules
+	test -e ${DESTDIR}/lib/udev/rules.d/*${NAME}.rules && rm -f ${DESTDIR}/lib/udev/rules.d/*${NAME}.rules
 	rm -f   ${DESTDIR}/etc/rc*.d/*${NAME}
 
 clean:

@@ -1,2 +1,3 @@
 # SUBSYSTEMS=="usb", ATTRS{idVendor}=="17ef", ATTRS{idProduct}=="6009", ACTION=="remove", RUN+="/usr/sbin/service likana stop"
 # SUBSYSTEMS=="usb", ATTRS{idVendor}=="17ef", ATTRS{idProduct}=="6009", ACTION=="remove", RUN+="/bin/systemctl stop likana.service"
+# SUBSYSTEMS=="usb", ATTRS{idVendor}=="17ef", ATTRS{idProduct}=="6009", ACTION=="add", RUN+="/bin/systemctl start likana"

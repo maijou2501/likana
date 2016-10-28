@@ -1,14 +1,21 @@
 # likana configuration
 
+
+# For SysVinit
 # Start the execution daemon? (if installed. yes or no. default yes.)
-LIKANA_START=yes
+#LIKANA_START=yes
 
 # Set character device file, set to /dev/input/event*
 # Set keyboard device file, MUST be set
-LIKANA_KEYBOARD=/dev/input/event8
+LIKANA_KEYBOARD=/dev/input/event2
 
 # Set mouse device file, optional set
-LIKANA_MOUSE=/dev/input/event9
+LIKANA_MOUSE=/dev/input/event3
 
-# Set execute shell (default /bin/bash)
-LIKANA_BASH=/bin/bash
+# Finally
+#LIKANA_ARGS="-k $LIKANA_KEYBOARD"
+#LIKANA_ARGS="-k $LIKANA_KEYBOARD -m $LIKANA_MOUSE"
+
+
+# For systemd
+LIKANA_ARGS="-k /dev/input/event2 -m /dev/input/event3"

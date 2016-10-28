@@ -1,0 +1,14 @@
+[Unit]
+Description=rikana(http://suwa.6.ql.bz/rikana.html) for Linux.
+Documentation=man:likana.c(1)
+After=systemd-udevd.service
+
+[Service]
+User=root
+Group=input
+EnvironmentFile=/etc/default/likana
+; ExecStart=/bin/sh -c "/usr/bin/likana -k /dev/input/event2 > /dev/input/event2"
+ExecStart=/bin/sh -c "/usr/bin/likana $LIKANA_ARGS > $LIKANA_KEYBOARD"
+ExecStop=/usr/bin/killall likana
+[Install]
+WantedBy=multi-user.target

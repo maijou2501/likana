@@ -8,8 +8,8 @@
  *
  * @file    likana.c
  * @author  maijou2501
- * @date    2016/09/13
- * @version 1.4
+ * @date    2016/09/15
+ * @version 1.5
  */
 
 #include <stdio.h>
@@ -22,7 +22,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#define VERSION "1.4"      //!< バージョン情報
+#define VERSION "1.5"      //!< バージョン情報
 #define PUSH    1          //!< キーボード押下判定の定義
 #define RELEASE 0          //!< キーボード開放判定の定義
 #define DETECT_KEY_CODE  0 //!< キーボード操作判定のための定義

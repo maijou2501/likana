@@ -13,7 +13,7 @@
 PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/sbin
 DESC="rikana for Linux."
 NAME=likana
-DAEMON=/usr/sbin/$NAME
+DAEMON=/usr/bin/$NAME
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 INSSERV=/usr/lib/insserv/insserv
@@ -96,7 +96,7 @@ do_start()
 
 
 	start-stop-daemon --start --quiet --make-pidfile --pidfile $PIDFILE \
-		--background --exec "$LIKANA_BASH" -- -c "exec $DAEMON \
+		--background --exec /bin/sh -- -c "exec $DAEMON \
 		$DAEMON_ARGS > $DAEMON_REDIRECT" || return 2
 }
 
